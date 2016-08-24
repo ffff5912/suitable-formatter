@@ -27,12 +27,12 @@ module SuitableFormatter
         end
 
         def build
-            mail_list = read(@read_file)
-            write_list = mail_list.select{ |mail|
-                nil == filter(mail[0])
+            rows = read(@read_file)
+            filterd = rows.select{ |row|
+                nil == filter(row[0])
             }
-            write(write_list, @write_file, 'w')
-            output(mail_list, write_list)
+            write(filterd, @write_file, 'w')
+            output(rows, filterd)
         end
 
         def write(write_list, file_name, mode)
@@ -51,10 +51,10 @@ module SuitableFormatter
             return target.match(/(#{@patterns.join('|')})$/)
         end
 
-        def output(mail_list, write_list)
-            puts mail_list.count
-            puts write_list.count
-            puts "Filtered:#{mail_list.count - write_list.count}"
+        def output(rows, filtered)
+            puts rows.count
+            puts filtered.count
+            puts "Filtered:#{rows.count - filtered.count}"
         end
     end
 end
