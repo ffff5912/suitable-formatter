@@ -17,10 +17,17 @@ module SuitableFormatter
             formatter = Formatter.new(read_file, write_file, patterns)
             formatter.build()
         end
+
+        desc 'desc file.csv 0', 'Sort by field in descending order.'
+        def desc(file, field = 0)
+            path = File.expand_path(file)
+            write_file = File.expand_path(File.dirname(path) + '/desc_' + File.basename(path))
+            Formatter.new(path, write_file).sort_by_desc(path, field)
+        end
     end
 
     class Formatter
-        def initialize(read_file, write_file, patterns)
+        def initialize(read_file, write_file, patterns = [])
             @read_file = read_file
             @write_file = write_file
             @patterns = patterns
@@ -33,6 +40,12 @@ module SuitableFormatter
             }
             write(filterd, @write_file, 'w')
             output(rows, filterd)
+        end
+
+        def sort_by_desc(path, field)
+            rows = read(path)
+            sorted = rows.sort_by {|row| row[field.to_i]}.reverse
+            write(sorted, @write_file, 'w')
         end
 
         def write(write_list, file_name, mode)
