@@ -24,6 +24,22 @@ module SuitableFormatter
             write_file = File.expand_path(File.dirname(path) + '/desc_' + File.basename(path))
             Formatter.new(path, write_file).sort_by_desc(path, field)
         end
+
+        desc 'extract_duplicate base.csv target.csv', 'Extract duplicates.'
+        def extract_duplicate(base_file, target_file, field = 0)
+            contents = [base_file, target_file]
+                .map {|file| File.expand_path(file) }
+                .map {|path| CSV.read(path)}
+
+            values = contents[1].map {|c| c[field]}.to_set
+            duplication = contents[0].to_set.select {|content|
+                values.include?(content[field])
+            }
+
+            path = File.expand_path(base_file)
+            write_file = File.expand_path(File.dirname(path) + '/duplication_' + File.basename(path))
+            Formatter.new('', '').write(duplication, write_file, 'w')
+        end
     end
 
     class Formatter
