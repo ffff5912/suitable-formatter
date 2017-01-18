@@ -6,7 +6,7 @@ require 'csv'
 module SuitableFormatter
     class CLI < Thor
         desc 'backward read_file.csv write_file.csv pattern_file.txt', ''
-        def backward(read_file, write_file, pattern_file)
+        def backward(read_file, write_file, pattern_file, slice_regexp = nil)
             patterns = []
             path = File.expand_path(pattern_file)
             File.open(path) do |file|
@@ -14,7 +14,7 @@ module SuitableFormatter
                     patterns.push(row.chomp)
                 end
             end
-            Document.new(Formatter::Backward.new(patterns)).build(read_file, write_file)
+            Document.new(Formatter::Backward.new(patterns, slice_regexp)).build(read_file, write_file)
         end
 
         desc 'desc file.csv 0', 'Sort by field in descending order.'
