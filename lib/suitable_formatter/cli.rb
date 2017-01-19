@@ -30,9 +30,9 @@ module SuitableFormatter
                 .map {|file| File.expand_path(file)}
                 .map {|path| Document::read(path)}
 
-            values = contents[1].map {|c| c[field]}.to_set
+            values = contents[1].map {|c| c[field.to_i]}.to_set
             duplication = contents[0].to_set.select {|content|
-                values.include?(content[field])
+                values.include?(content[field.to_i])
             }
 
             path = File.expand_path(base_file)
