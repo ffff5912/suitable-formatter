@@ -24,7 +24,8 @@ module SuitableFormatter
             Document.new(Formatter::Desc.new(field)).build(path, write_file)
         end
 
-        desc 'extract_duplicate base.csv target.csv', 'Extract duplicates.'
+        desc 'extract_duplicate base.csv target.csv [--option]', 'Extract duplicates.'
+        option :aggregate, :type => :boolean, :aliases => :a
         def extract_duplicate(base_file, target_file, field = 0)
             contents = [base_file, target_file]
                 .map {|file| File.expand_path(file)}
@@ -38,6 +39,10 @@ module SuitableFormatter
             path = File.expand_path(base_file)
             write_file = File.expand_path(File.dirname(path) + '/duplication_' + File.basename(path))
             Document::write(duplication, write_file, 'w')
+            if options.aggregate
+                puts duplication.count
+                puts ((contents[0].count.to_f / contents[1].count) * 100).round(2)
+            end
         end
     end
 
