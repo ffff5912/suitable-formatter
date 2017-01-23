@@ -17,6 +17,13 @@ module SuitableFormatter
             Document.new(Formatter::Backward.new(patterns, slice_regexp)).build(read_file, write_file)
         end
 
+        desc 'asc file.csv 0', 'Sort by field in ascending order.'
+        def asc(file, field = 0)
+            path = File.expand_path(file)
+            write_file = File.expand_path(File.dirname(path) + '/asc_' + File.basename(path))
+            Document.new(Formatter::Asc.new(field)).build(path, write_file)
+        end
+
         desc 'desc file.csv 0', 'Sort by field in descending order.'
         def desc(file, field = 0)
             path = File.expand_path(file)

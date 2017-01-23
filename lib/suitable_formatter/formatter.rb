@@ -34,4 +34,14 @@ module Formatter
             rows.sort_by {|row| row[@field.to_i]}.reverse
         end
     end
+
+    class Asc < Base
+        def initialize(field)
+            @field = field
+        end
+
+        def format(rows)
+            rows.sort_by {|row| row[@field.to_i]}
+        end
+    end
 end
