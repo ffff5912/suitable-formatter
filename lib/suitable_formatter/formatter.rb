@@ -21,7 +21,10 @@ module Formatter
         end
 
         def prepare_base_value(value)
-            value.slice(%r(#{@slice_regexp})) if @slice_regexp
+            return value if value.nil?
+            return value if @slice_regexp.empty?
+            
+            value.slice(%r(#{@slice_regexp}))
         end
     end
 
