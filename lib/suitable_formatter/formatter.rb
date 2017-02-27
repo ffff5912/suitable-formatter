@@ -22,8 +22,33 @@ module Formatter
 
         def prepare_base_value(value)
             return value if value.nil?
-            return value if @slice_regexp.empty?
-            
+            return value if @slice_regexp.nil?
+
+            value.slice(%r(#{@slice_regexp}))
+        end
+    end
+
+    class IncludeChecker
+        def initialize(patterns)
+            @patterns = patterns
+        end
+
+        def format(rows)
+            current, total = 0, rows.count
+            rows.select{|row|
+                print("#{current+=1}/#{total}\r")
+                base_value = prepare_base_value(row[0])
+                included = @patterns.select {|pattern|
+                    base_value.include?(pattern)
+                }
+                included.length == 0
+            }
+        end
+
+        def prepare_base_value(value)
+            return value if value.nil?
+            return value if @slice_regexp.nil?
+
             value.slice(%r(#{@slice_regexp}))
         end
     end

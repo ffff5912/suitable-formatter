@@ -17,6 +17,18 @@ module SuitableFormatter
             Document.new(Formatter::Backward.new(patterns, slice_regexp)).build(read_file, write_file)
         end
 
+        desc 'include read_file.csv write_file.csv pattern_file.txt', ''
+        def include(read_file, write_file, pattern_file)
+            patterns = []
+            path = File.expand_path(pattern_file)
+            File.open(path) do |file|
+                file.each_line do |row|
+                    patterns.push(row.chomp)
+                end
+            end
+            Document.new(Formatter::IncludeChecker.new(patterns)).build(read_file, write_file)
+        end
+
         desc 'asc file.csv 0', 'Sort by field in ascending order.'
         def asc(file, field = 0)
             path = File.expand_path(file)
