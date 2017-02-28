@@ -13,10 +13,11 @@ module Formatter
 
         def format(rows)
             current, total = 0, rows.count
+
             rows.select{|row|
                 print("#{current+=1}/#{total}\r")
                 base_value = prepare_base_value(row[0])
-                @patterns.to_set.include?(base_value) == false
+                @patterns.key?(base_value) == false
             }
         end
 

@@ -7,11 +7,11 @@ module SuitableFormatter
     class CLI < Thor
         desc 'backward read_file.csv write_file.csv pattern_file.txt', ''
         def backward(read_file, write_file, pattern_file, slice_regexp = nil)
-            patterns = []
+            patterns = {}
             path = File.expand_path(pattern_file)
             File.open(path) do |file|
                 file.each_line do |row|
-                    patterns.push(row.chomp)
+                    patterns[row.chomp] = 0
                 end
             end
             Document.new(Formatter::Backward.new(patterns, slice_regexp)).build(read_file, write_file)
