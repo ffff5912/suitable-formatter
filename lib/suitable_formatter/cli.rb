@@ -63,6 +63,14 @@ module SuitableFormatter
                 puts ((contents[0].count.to_f / contents[1].count) * 100).round(2)
             end
         end
+
+        desc 'f read.csv format', ''
+        def f(read_file, format)
+            rows = Document.read(read_file)
+            rows.each {|row|
+                p sprintf("#{format}", *row) if row.length > 0
+            }
+        end
     end
 
     class Document
