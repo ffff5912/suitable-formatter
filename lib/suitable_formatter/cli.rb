@@ -14,6 +14,7 @@ module SuitableFormatter
                     patterns[row.chomp] = 0
                 end
             end
+
             Document.new(Formatter::Backward.new(patterns, slice_regexp)).build(read_file, write_file)
         end
 
@@ -26,7 +27,21 @@ module SuitableFormatter
                     patterns.push(row.chomp)
                 end
             end
-            Document.new(Formatter::IncludeChecker.new(patterns)).build(read_file, write_file)
+
+            line = 1
+            split_line = 10000
+            text = ''
+            File.open(path) do |file|
+                file.each_line do |row|
+                    text << row
+                    if (line % split_line) == 0
+                        matches = text.scan(/((.*?#{patterns.join('|')}.*?)\R)/)
+                        text = ''
+                    end
+                    line = line + 1
+                end
+            end
+            formatter = Formatter::IncludeChecker.new(patterns)
         end
 
         desc 'asc file.csv 0', 'Sort by field in ascending order.'
